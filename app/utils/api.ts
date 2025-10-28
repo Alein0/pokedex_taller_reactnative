@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseUrl = "https://pokeapi.co/api/v2";
 
-// 🔹 Mapa región → pokedex asociada (número correcto)
+// Mapa región → pokedex asociada (número correcto)
 const regionToPokedex: Record<string, string> = {
   kanto: "2",
   johto: "3",
@@ -16,7 +16,7 @@ const regionToPokedex: Record<string, string> = {
   paldea: "31",
 };
 
-// 🔹 Lista fija con todas las regiones oficiales
+// Lista fija con todas las regiones oficiales
 const ALL_REGIONS = [
   "kanto",
   "johto",
@@ -30,7 +30,7 @@ const ALL_REGIONS = [
   "paldea",
 ];
 
-// 🔹 Obtener lista de regiones
+// Obtener lista de regiones
 export async function getRegions() {
   try {
     const res = await fetch(`${baseUrl}/region/`);
@@ -48,7 +48,7 @@ export async function getRegions() {
   }
 }
 
-// 🔹 Obtener pokemons por región (con ID oficial)
+// Obtener pokemons por región (con ID oficial)
 export async function getPokemonsByRegion(regionName: string) {
   try {
     const pokedexId = regionToPokedex[regionName.toLowerCase()];
@@ -80,7 +80,7 @@ export async function getPokemonsByRegion(regionName: string) {
   }
 }
 
-// 🔹 Tipos de Pokémon
+// Tipos de Pokémon
 export async function getPokemonTypes() {
   try {
     const res = await fetch(`${baseUrl}/type/`);
@@ -93,8 +93,8 @@ export async function getPokemonTypes() {
   }
 }
 
-// ------------------ NUEVA FUNCIÓN ------------------
-// 🔹 Obtener pokemons (nombres) que pertenecen a un tipo
+
+//Obtener pokemons (nombres) que pertenecen a un tipo
 // Devuelve un Set de nombres para una búsqueda rápida
 export async function getPokemonsByType(typeName: string): Promise<Set<string>> {
   try {
@@ -110,10 +110,10 @@ export async function getPokemonsByType(typeName: string): Promise<Set<string>> 
   }
 }
 
-// --------------------------------------------------
 
-// 🔹 Detalles de un Pokémon
-export async function getPokemonDetails(nameOrId: string) {
+
+//  Detalles de un Pokémon
+export async function getPokemonDetails(nameOrId: string, region?: string) {
   try {
     const res = await fetch(`${baseUrl}/pokemon/${nameOrId}`);
     if (!res.ok) throw new Error("No se pudo obtener el Pokémon");
@@ -132,6 +132,7 @@ export async function getPokemonDetails(nameOrId: string) {
       types: data.types.map((t: any) => t.type.name),
       height: data.height / 10,
       weight: data.weight / 10,
+      region: region ?? "Desconocida",
       sprite:
         data.sprites?.other?.["official-artwork"]?.front_default ??
         data.sprites?.front_default ??
@@ -146,7 +147,8 @@ export async function getPokemonDetails(nameOrId: string) {
   }
 }
 
-// 🔹 Obtener cadena de evoluciones
+
+// Obtener cadena de evoluciones
 export async function getEvolutionChain(url: string) {
   try {
     const res = await fetch(url);

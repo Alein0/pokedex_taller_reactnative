@@ -159,7 +159,7 @@ export default function DetallesPokemon({
       <View style={styles.infoBox}>
         <Text style={styles.info}>Altura: {(details.height / 10).toFixed(1)} m</Text>
         <Text style={styles.info}>Peso: {(details.weight / 10).toFixed(1)} kg</Text>
-        <Text style={styles.info}>Región: {details.region || "Desconocida"}</Text>
+        <Text style={styles.info}>Región: {details.region}</Text>
       </View>
 
       {/* Descripción */}

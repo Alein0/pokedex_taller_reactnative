@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // 🧩 importación añadida
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
 import Inicio from "../screens/inicio";
 import ListaPokemon from "../screens/lista-pokemon";
 import DetallesPokemon from "../screens/detalles-pokemon";
@@ -11,7 +11,7 @@ export default function App() {
   const [pokemonSeleccionado, setPokemonSeleccionado] = useState<any>(null);
   const [favoritos, setFavoritos] = useState<any[]>([]);
 
-  // --- 🔹 Cargar favoritos al iniciar ---
+  // Cargar favoritos al iniciar ---
   useEffect(() => {
     const cargarFavoritos = async () => {
       try {
@@ -24,7 +24,7 @@ export default function App() {
     cargarFavoritos();
   }, []);
 
-  // --- 🔹 Guardar favoritos cada vez que cambien ---
+  // Guardar favoritos cada vez que cambien ---
   useEffect(() => {
     const guardarFavoritos = async () => {
       try {

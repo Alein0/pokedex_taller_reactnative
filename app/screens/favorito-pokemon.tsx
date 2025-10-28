@@ -17,7 +17,7 @@ export default function FavoritoPokemon({ favoritos, onSelectPokemon, onBack, on
   const handleRemove = (id: number | string, name?: string) => {
     if (onRemoveFavorite) {
       onRemoveFavorite(id);
-      Alert.alert("Eliminado", `${name ?? "Pokémon"} fue quitado de favoritos`);
+      Alert.alert("Eliminado", `${name ?? "Pokémon"} fue eliminado de favoritos`);
     }
   };
 
@@ -47,7 +47,7 @@ export default function FavoritoPokemon({ favoritos, onSelectPokemon, onBack, on
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleRemove(item.id ?? item.name, item.name)}>
-              <Text style={styles.remove}>❌ Quitar</Text>
+              <Text style={styles.remove}>❌ Eliminar</Text>
             </TouchableOpacity>
           </View>
         )}
