@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import Inicio from "./screens/inicio";
 import ListaPokemon from "./screens/lista-pokemon";
 import DetallesPokemon from "./screens/detalles-pokemon";
 import FavoritoPokemon from "./screens/favorito-pokemon";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Pokemon {
   id: number;
@@ -17,17 +18,46 @@ export default function App() {
   const [pokemonSeleccionado, setPokemonSeleccionado] = useState<Pokemon | null>(null);
   const [favoritos, setFavoritos] = useState<Pokemon[]>([]);
 
-  const irA = (nombre: string) => setPantalla(nombre);
+  const saveFavorites = async (favoritesArray) => {
+  try {
+    const jsonValue = JSON.stringify(favoritesArray);
+    await AsyncStorage.setItem('@favorites', jsonValue);
+  } catch (e) {
+    console.error('Error saving favorites', e);
+  }
+};
 
-  const agregarFavorito = (pokemon: Pokemon) => {
-    if (!favoritos.find((f) => f.id === pokemon.id)) {
-      setFavoritos([...favoritos, pokemon]);
+
+  useEffect(() => {
+  const loadFavorites = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@favorites');
+      if (jsonValue != null) {
+        setFavoritos(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.error('Error loading favorites', e);
     }
   };
+  loadFavorites();
+}, []);
 
-  const eliminarFavorito = (id: number) => {
-    setFavoritos(favoritos.filter((p) => p.id !== id));
-  };
+
+  const irA = (nombre: string) => setPantalla(nombre);
+
+ const agregarFavorito = (pokemon: Pokemon) => {
+  if (!favoritos.find(f => f.id === pokemon.id)) {
+    const nuevosFavoritos = [...favoritos, pokemon];
+    setFavoritos(nuevosFavoritos);
+    saveFavorites(nuevosFavoritos);
+  }
+};
+
+const eliminarFavorito = (id: number) => {
+  const nuevosFavoritos = favoritos.filter(p => p.id !== id);
+  setFavoritos(nuevosFavoritos);
+  saveFavorites(nuevosFavoritos);
+};
 
   return (
     <View style={styles.container}>
@@ -66,7 +96,15 @@ export default function App() {
       )}
 
       {pantalla === "favoritos" && (
-        <FavoritoPokemon favoritos={favoritos} onBack={() => irA("inicio")} />
+        <FavoritoPokemon
+          favoritos={favoritos}
+          onSelectPokemon={(pokemon) => {
+            setPokemonSeleccionado(pokemon);
+            setPantalla('detalles');
+          }}
+          onBack={() => setPantalla('inicio')}
+          onRemoveFavorite={eliminarFavorito}
+        />
       )}
     </View>
   );
