@@ -135,18 +135,18 @@ export default function DetallesPokemon({
     return (
       <View style={styles.loadingContainer}>
         <Text style={{ color: "white" }}>No hay información disponible.</Text>
-        <TouchableOpacity onPress={onBack}>
-          <Text style={styles.vol}>⬅️ Volver</Text>
-        </TouchableOpacity>
+              <TouchableOpacity onPress={onBack} style={styles.volverBtn} activeOpacity={0.8}>
+                <Text style={styles.volverText}>Volver</Text>
+              </TouchableOpacity>
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity onPress={onBack}>
-        <Text style={styles.vol}>⬅️ Volver</Text>
-      </TouchableOpacity>
+            <TouchableOpacity onPress={onBack} style={styles.volverBtn} activeOpacity={0.8}>
+              <Text style={styles.volverText}>Volver</Text>
+            </TouchableOpacity>
 
       {/* Encabezado */}
       <View style={styles.header}>
@@ -214,7 +214,28 @@ export default function DetallesPokemon({
 }
 
 const styles = StyleSheet.create({
-  vol: {marginTop:50, color:"#ffcb05"},
+  volverBtn: {
+  marginTop: 40,
+  backgroundColor: "#ffcb05",
+  borderRadius: 25,
+  paddingVertical: 10,
+  paddingHorizontal: 25,
+  alignSelf: "flex-start",
+  shadowColor: "#ffcb05",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.4,
+  shadowRadius: 6,
+  elevation: 6, // para Android
+  transform: [{ scale: 1 }],
+},
+volverText: {
+  color: "#1a1a1a",
+  fontSize: 16,
+  fontWeight: "bold",
+  textAlign: "center",
+  textTransform: "uppercase",
+},
+
   container: { flex: 1, backgroundColor: "#1a1a1a", padding: 10 },
   header: { alignItems: "center", marginBottom: 20 },
   title: { color: "white", fontSize: 24, textTransform: "capitalize" },

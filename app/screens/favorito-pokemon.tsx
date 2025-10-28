@@ -1,14 +1,15 @@
 import React from "react";
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function FavoritoPokemon({ favoritos, onSelectPokemon, onBack, onRemoveFavorite }: any) {
   // Si no hay favoritos
   if (!favoritos || favoritos.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <TouchableOpacity onPress={onBack}>
-          <Text style={styles.vol}>⬅️ Volver</Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={onBack} style={styles.volverBtn} activeOpacity={0.8}>
+  <Text style={styles.volverText}>Volver</Text>
+</TouchableOpacity>
+
         <Text style={styles.emptyText}>No hay Pokémon favoritos aún.</Text>
       </View>
     );
@@ -29,9 +30,10 @@ export default function FavoritoPokemon({ favoritos, onSelectPokemon, onBack, on
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onBack}>
-        <Text style={styles.vol}>⬅️ Volver</Text>
+      <TouchableOpacity onPress={onBack} style={styles.volverBtn} activeOpacity={0.8}>
+        <Text style={styles.volverText}> Volver</Text>
       </TouchableOpacity>
+
 
       <Text style={styles.title}>❤️ Pokémon Favoritos</Text>
 
@@ -57,10 +59,36 @@ export default function FavoritoPokemon({ favoritos, onSelectPokemon, onBack, on
 }
 
 const styles = StyleSheet.create({
-    vol: {marginTop:50, color:"#ffcb05"},
+  volverBtn: {
+    marginTop: 40,
+    backgroundColor: "#ffcb05",
+    borderRadius: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    alignSelf: "flex-start",
+    shadowColor: "#ffcb05",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 6, // para Android
+    transform: [{ scale: 1 }],
+  },
+  volverText: {
+    color: "#1a1a1a",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
 
   container: { flex: 1, backgroundColor: "#1a1a1a", padding: 10 },
-  title: { color: "white", fontSize: 18, marginBottom: 10, textAlign: "center" },
+  title: { 
+marginTop:30,
+color: "#ffffff",
+  fontSize: 16,
+  fontWeight: "bold",
+  textAlign:"center"
+   },
   card: {
     flex: 1,
     backgroundColor: "#2a2a2a",
