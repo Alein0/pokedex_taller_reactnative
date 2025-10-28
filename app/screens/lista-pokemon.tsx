@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  ActivityIndicator,
   FlatList,
   Image,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-  ActivityIndicator,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { getPokemonsByRegion, getPokemonTypes, getPokemonDetails, getPokemonsByType } from "../utils/api";
+import { getPokemonDetails, getPokemonsByRegion, getPokemonsByType, getPokemonTypes } from "../utils/api";
 
 export default function ListaPokemon({ region, onSelectPokemon, onBack }: any) {
   const [pokemons, setPokemons] = useState<any[]>([]);
@@ -119,16 +119,17 @@ export default function ListaPokemon({ region, onSelectPokemon, onBack }: any) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator color="#ffcb05" size="large"  />
+        <ActivityIndicator color="#ffcb05" size="large" />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onBack}>
-        <Text  style={styles.vol}> Volver</Text>
+      <TouchableOpacity onPress={onBack} style={styles.volverBtn} activeOpacity={0.8}>
+        <Text style={styles.volverText}>Volver</Text>
       </TouchableOpacity>
+
 
       <Text style={styles.title}>Pokémon de {region}</Text>
 
@@ -194,14 +195,41 @@ export default function ListaPokemon({ region, onSelectPokemon, onBack }: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#1a1a1a", padding: 10 },
-  vol: {marginTop:50, color:"#ffcb05"},
-  title: { color: "white", fontSize: 18, marginBottom: 10 },
+  volverBtn: {
+  marginTop: 40,
+  backgroundColor: "#ffcb05",
+  borderRadius: 25,
+  paddingVertical: 10,
+  paddingHorizontal: 25,
+  alignSelf: "flex-start",
+  shadowColor: "#ffcb05",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.4,
+  shadowRadius: 6,
+  elevation: 6, // para Android
+  transform: [{ scale: 1 }],
+},
+volverText: {
+  color: "#1a1a1a",
+  fontSize: 16,
+  fontWeight: "bold",
+  textAlign: "center",
+  textTransform: "uppercase",
+},
+
+  title: { 
+marginTop:30,
+color: "#ffffff",
+  fontSize: 16,
+  fontWeight: "bold"
+   },
   input: {
     backgroundColor: "#2a2a2a",
     color: "white",
     padding: 8,
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 2,
+    marginTop: 20
   },
   card: {
     flex: 1,
