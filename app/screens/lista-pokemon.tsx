@@ -98,23 +98,21 @@ export default function ListaPokemon({ region, onSelectPokemon, onBack }: any) {
     }
   };
 
-  const handleSelect = async (item: any) => {
-    // Si item ya contiene información completa (id, sprite) la pasamos tal cual,
-    // si no, pedimos detalles antes de navegar para que DetallesPokemon funcione correctamente.
-    if (item.id && item.sprite && item.types && item.types.length > 0) {
-      onSelectPokemon(item);
-    } else {
-      try {
-        setLoading(true);
-        const det = await getPokemonDetails(item.name || item);
-        if (det) onSelectPokemon(det);
-      } catch (err) {
-        console.log("Error al obtener detalles al seleccionar:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+ const handleSelect = async (item: any) => {
+  setLoading(true);
+  try {
+    // Pasa region como segundo argumento
+    const det = await getPokemonDetails(item.name, region);
+    if (det) onSelectPokemon(det);
+  } catch (err) {
+    console.log("Error al obtener detalles al seleccionar", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   if (loading) {
     return (

@@ -44,7 +44,7 @@ export default function DetallesPokemon({
       setLoading(true);
       try {
         // pokemon puede ser nombre, id o un objeto con .name
-        const info = await getPokemonDetails(pokemon.name ?? pokemon);
+        const info = await getPokemonDetails(pokemon.name ?? pokemon, pokemon.region);
         if (!mounted || !info) return;
 
         setDetails(info);
@@ -114,6 +114,7 @@ export default function DetallesPokemon({
         name: details.name,
         sprite: details.sprite,
         types: details.types,
+        region: details.region,
       };
       onAddFavorite(fav);
       setFavState(true);
@@ -159,7 +160,7 @@ export default function DetallesPokemon({
       <View style={styles.infoBox}>
         <Text style={styles.info}>Altura: {(details.height / 10).toFixed(1)} m</Text>
         <Text style={styles.info}>Peso: {(details.weight / 10).toFixed(1)} kg</Text>
-        <Text style={styles.info}>Región: {details.region}</Text>
+        <Text style={styles.info}>Región: {details.region ? details.region : "Desconocida"}</Text>
       </View>
 
       {/* Descripción */}

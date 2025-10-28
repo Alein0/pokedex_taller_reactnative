@@ -130,8 +130,8 @@ export async function getPokemonDetails(nameOrId: string, region?: string) {
       id: data.id,
       name: data.name,
       types: data.types.map((t: any) => t.type.name),
-      height: data.height / 10,
-      weight: data.weight / 10,
+      height: data.height,
+      weight: data.weight,
       region: region ?? "Desconocida",
       sprite:
         data.sprites?.other?.["official-artwork"]?.front_default ??
@@ -146,6 +146,7 @@ export async function getPokemonDetails(nameOrId: string, region?: string) {
     return null;
   }
 }
+
 
 
 // Obtener cadena de evoluciones
