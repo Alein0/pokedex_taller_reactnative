@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const baseUrl = "https://pokeapi.co/api/v2";
 
 // 🔹 Mapa región → pokedex asociada (número correcto)
@@ -57,14 +59,17 @@ export async function getPokemonsByRegion(regionName: string) {
     const data = await res.json();
 
     const list = data.pokemon_entries.map((p: any) => {
-      const id = p.pokemon_species.url
-        .split("/")
-        .filter(Boolean)
-        .pop(); // ✅ ID global correcto
+      const id = parseInt(p.pokemon_species.url.split("/").filter(Boolean).pop());
       return {
-        id: parseInt(id),
+        id,
         name: p.pokemon_species.name,
         sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
+        // campos adicionales vacíos para completar cuando se pidan detalles
+        types: [],
+        height: 0,
+        weight: 0,
+        description: "",
+        evolution_chain_url: null,
       };
     });
 
@@ -87,6 +92,25 @@ export async function getPokemonTypes() {
     return [];
   }
 }
+
+// ------------------ NUEVA FUNCIÓN ------------------
+// 🔹 Obtener pokemons (nombres) que pertenecen a un tipo
+// Devuelve un Set de nombres para una búsqueda rápida
+export async function getPokemonsByType(typeName: string): Promise<Set<string>> {
+  try {
+    const res = await fetch(`${baseUrl}/type/${typeName}`);
+    if (!res.ok) throw new Error("No se pudo obtener pokemons por tipo");
+    const data = await res.json();
+
+    const names: string[] = data.pokemon.map((p: any) => p.pokemon.name);
+    return new Set<string>(names);
+  } catch (error) {
+    console.error("Error en getPokemonsByType:", error);
+    return new Set<string>();
+  }
+}
+
+// --------------------------------------------------
 
 // 🔹 Detalles de un Pokémon
 export async function getPokemonDetails(nameOrId: string) {

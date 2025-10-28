@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
   ActivityIndicator,
   Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { getPokemonDetails, getEvolutionChain } from "../utils/api";
-
+import { getEvolutionChain, getPokemonDetails } from "../utils/api";
 type PokemonDetails = {
   id: number;
   name: string;
@@ -37,40 +36,44 @@ export default function DetallesPokemon({
   const [loading, setLoading] = useState(true);
   const [favState, setFavState] = useState(false);
 
+  // Cargar detalles del Pokémon
   useEffect(() => {
     let mounted = true;
 
-    async function load() {
+    async function loadDetails() {
       setLoading(true);
       try {
-        const info = await getPokemonDetails(pokemon.name || pokemon);
-        if (!mounted) return;
+        // pokemon puede ser nombre, id o un objeto con .name
+        const info = await getPokemonDetails(pokemon.name ?? pokemon);
+        if (!mounted || !info) return;
 
         setDetails(info);
-        setFavState(Boolean(favoritos?.find((f: any) => f.id === info.id)));
+        // Comparar con String para evitar mismatch number/string
+        setFavState(Boolean(favoritos?.some((f: any) => String(f.id) === String(info.id))));
 
         if (info.evolution_chain_url) {
           const evos = await getEvolutionChain(info.evolution_chain_url);
-          if (!mounted) return;
-          setEvolutions(evos);
+          if (mounted) setEvolutions(evos || []);
         } else {
           setEvolutions([]);
         }
-      } catch (e) {
-        console.log("Error cargando detalles:", e);
+      } catch (error) {
+        console.log("Error cargando detalles:", error);
         Alert.alert("Error", "No se pudieron cargar los detalles del Pokémon.");
       } finally {
         if (mounted) setLoading(false);
       }
     }
 
-    load();
+    loadDetails();
     return () => {
       mounted = false;
     };
   }, [pokemon, favoritos]);
 
+  // Cambiar de Pokémon al seleccionar una evolución
   const handleSelectEvolution = async (evo: any) => {
+    if (!evo || !evo.name) return;
     try {
       setLoading(true);
       const evoDetails = await getPokemonDetails(evo.name);
@@ -78,32 +81,46 @@ export default function DetallesPokemon({
         Alert.alert("Error", "No se pudieron obtener los detalles de la evolución.");
         return;
       }
-      if (onSelectEvolution) onSelectEvolution(evoDetails);
+
       setDetails(evoDetails);
+      if (onSelectEvolution) onSelectEvolution(evoDetails);
+
       if (evoDetails.evolution_chain_url) {
         const evs = await getEvolutionChain(evoDetails.evolution_chain_url);
-        setEvolutions(evs);
+        setEvolutions(evs || []);
       } else {
         setEvolutions([]);
       }
-    } catch (err) {
-      console.log("Error al seleccionar evolución:", err);
+    } catch (error) {
+      console.log("Error al seleccionar evolución:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Agregar o quitar de favoritos
   const toggleFavorite = () => {
     if (!details) return;
-    if (favState) {
+
+    const yaEsFavorito = favoritos.some((f: any) => String(f.id) === String(details.id));
+
+    if (yaEsFavorito) {
       onRemoveFavorite(details.id);
       setFavState(false);
     } else {
-      onAddFavorite(details);
+      // Guardamos una versión normalizada del favorito
+      const fav = {
+        id: details.id,
+        name: details.name,
+        sprite: details.sprite,
+        types: details.types,
+      };
+      onAddFavorite(fav);
       setFavState(true);
     }
   };
 
+  // Mostrar indicador de carga
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -113,12 +130,13 @@ export default function DetallesPokemon({
     );
   }
 
+  // Si no hay datos
   if (!details) {
     return (
       <View style={styles.loadingContainer}>
         <Text style={{ color: "white" }}>No hay información disponible.</Text>
         <TouchableOpacity onPress={onBack}>
-          <Text style={styles.back}>⬅️ Volver</Text>
+          <Text style={styles.vol}>⬅️ Volver</Text>
         </TouchableOpacity>
       </View>
     );
@@ -127,21 +145,24 @@ export default function DetallesPokemon({
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={onBack}>
-        <Text style={styles.back}>⬅️ Volver</Text>
+        <Text style={styles.vol}>⬅️ Volver</Text>
       </TouchableOpacity>
 
+      {/* Encabezado */}
       <View style={styles.header}>
         <Text style={styles.title}>{details.name}</Text>
         <Image source={{ uri: details.sprite }} style={styles.image} />
         <Text style={styles.types}>{details.types.join(", ")}</Text>
       </View>
 
+      {/* Información básica */}
       <View style={styles.infoBox}>
         <Text style={styles.info}>Altura: {(details.height / 10).toFixed(1)} m</Text>
         <Text style={styles.info}>Peso: {(details.weight / 10).toFixed(1)} kg</Text>
         <Text style={styles.info}>Región: {details.region || "Desconocida"}</Text>
       </View>
 
+      {/* Descripción */}
       <View style={styles.section}>
         <Text style={styles.subtitle}>Descripción</Text>
         <Text style={styles.text}>
@@ -149,6 +170,7 @@ export default function DetallesPokemon({
         </Text>
       </View>
 
+      {/* Movimientos */}
       <View style={styles.section}>
         <Text style={styles.subtitle}>Ataques</Text>
         {details.moves && details.moves.length > 0 ? (
@@ -162,12 +184,14 @@ export default function DetallesPokemon({
         )}
       </View>
 
+      {/* Botón de favoritos */}
       <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteBtn}>
         <Text style={{ color: "black" }}>
-          {favState ? "💔 Quitar favorito" : "❤️ Agregar a favoritos"}
+          {favState ? "💔 Quitar de favoritos" : "❤️ Agregar a favoritos"}
         </Text>
       </TouchableOpacity>
 
+      {/* Evoluciones */}
       {evolutions.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.subtitle}>Evoluciones</Text>
@@ -190,8 +214,8 @@ export default function DetallesPokemon({
 }
 
 const styles = StyleSheet.create({
+  vol: {marginTop:50, color:"#ffcb05"},
   container: { flex: 1, backgroundColor: "#1a1a1a", padding: 10 },
-  back: { color: "#ffcb05", marginBottom: 10 },
   header: { alignItems: "center", marginBottom: 20 },
   title: { color: "white", fontSize: 24, textTransform: "capitalize" },
   image: { width: 160, height: 160, marginVertical: 8 },

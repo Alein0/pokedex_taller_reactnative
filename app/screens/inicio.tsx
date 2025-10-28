@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
 import { getRegions } from "../utils/api";
-
 export default function Inicio({ onSelectRegion, irAFavoritos }: any) {
   const [regiones, setRegiones] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +55,7 @@ export default function Inicio({ onSelectRegion, irAFavoritos }: any) {
       ))}
 
       <TouchableOpacity style={styles.favoritos} onPress={irAFavoritos}>
-        <Text style={styles.text}>⭐ Favoritos</Text>
+        <Text style={styles.text2}>⭐ Favoritos</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -86,5 +85,8 @@ const styles = StyleSheet.create({
     borderColor: "#ffcb05",
     padding: 10,
     borderRadius: 8,
+  },
+  text2: {
+    color: "#ffffffff"
   },
 });
