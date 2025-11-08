@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   shadowOffset: { width: 0, height: 4 },
   shadowOpacity: 0.4,
   shadowRadius: 6,
-  elevation: 6, // para Android
+  elevation: 6, 
   transform: [{ scale: 1 }],
 },
 volverText: {

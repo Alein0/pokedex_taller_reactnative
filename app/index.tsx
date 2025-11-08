@@ -1,10 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import Inicio from "./screens/inicio";
-import ListaPokemon from "./screens/lista-pokemon";
+import { StyleSheet, View } from "react-native";
 import DetallesPokemon from "./screens/detalles-pokemon";
 import FavoritoPokemon from "./screens/favorito-pokemon";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Inicio from "./screens/inicio";
+import ListaPokemon from "./screens/lista-pokemon";
 
 interface Pokemon {
   id: number;
@@ -26,6 +26,8 @@ export default function App() {
     console.error('Error saving favorites', e);
   }
 };
+
+//XD
 
 
   useEffect(() => {

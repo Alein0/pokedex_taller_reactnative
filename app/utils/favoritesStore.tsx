@@ -11,7 +11,7 @@ export default function App() {
   const [pokemonSeleccionado, setPokemonSeleccionado] = useState<any>(null);
   const [favoritos, setFavoritos] = useState<any[]>([]);
 
-  // Cargar favoritos al iniciar ---
+  // Cargar favoritos al iniciar 
   useEffect(() => {
     const cargarFavoritos = async () => {
       try {
@@ -24,7 +24,7 @@ export default function App() {
     cargarFavoritos();
   }, []);
 
-  // Guardar favoritos cada vez que cambien ---
+  // Guardar favoritos cada vez que cambien 
   useEffect(() => {
     const guardarFavoritos = async () => {
       try {
@@ -36,7 +36,7 @@ export default function App() {
     guardarFavoritos();
   }, [favoritos]);
 
-  // --- Normalizar antes de guardar ---
+  // Normalizar antes de guardar
   const normalizeFavorite = (p: any) => {
     return {
       id: p.id ?? p?.name ?? null,
@@ -54,7 +54,7 @@ export default function App() {
     };
   };
 
-  // --- Manejo de favoritos ---
+  //  Manejo de favoritos 
   const agregarFavorito = (pokemon: any) => {
     const fav = normalizeFavorite(pokemon);
     if (!fav.id) return;
@@ -67,7 +67,7 @@ export default function App() {
     setFavoritos((prev) => prev.filter((p) => String(p.id) !== String(id)));
   };
 
-  // --- Render según pantalla ---
+  // Render según pantalla 
   if (pantalla === "inicio") {
     return (
       <Inicio

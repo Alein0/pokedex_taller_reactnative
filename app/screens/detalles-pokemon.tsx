@@ -108,7 +108,7 @@ export default function DetallesPokemon({
       onRemoveFavorite(details.id);
       setFavState(false);
     } else {
-      // Guardamos una versión normalizada del favorito
+      // Guarda una versión normalizada del favorito
       const fav = {
         id: details.id,
         name: details.name,
